@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="~/_content/styles/bootstrap.css">
+    <script type="text/javascript" src="~/_content/scripts/jquery-1.7.1.js"></script>
+    <script type="text/javascript" src="~/_content/scripts/bootstrap.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <use:view />
+    </div>
+  </body>
+</html>

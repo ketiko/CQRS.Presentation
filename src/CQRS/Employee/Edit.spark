@@ -1,0 +1,24 @@
+﻿<viewdata model="CQRS.Employee.EditViewModel" />
+
+<h2 class="page-header">Edit Address</h2>
+<h3>${Model.FirstName} ${Model.LastName}</h3>
+
+<form method="POST" action="Save" class="well">
+  <fieldset>
+    <input type="hidden" name="Id" value="${Model.Id}" />
+
+    ${this.LabelFor(x=> x.Street)}
+    ${this.InputFor(x=> x.Street)}
+
+    ${this.LabelFor(x=> x.City)}
+    ${this.InputFor(x=> x.City)}
+
+    <label>State</label>
+    <strong>${Model.State}</strong>
+  </fieldset>
+
+  <div class="form-actions">
+    <input type="submit" value="Save" class="btn btn-primary" />
+    <a href="/" class="btn">Cancel</a>
+  </div>
+</form>
