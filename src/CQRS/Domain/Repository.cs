@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using NHibernate;
 using NHibernate.Linq;
 
@@ -14,9 +13,9 @@ namespace CQRS.Domain
             _session = session;
         }
 
-        public IList<T> GetAll<T>()
+        public IEnumerable<T> GetAll<T>()
         {
-            return _session.Query<T>().ToList();
+            return _session.Query<T>();
         }
 
         public T Get<T>(int id)

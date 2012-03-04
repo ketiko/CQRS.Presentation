@@ -15,16 +15,18 @@ namespace CQRS.Employee
 
         public IndexViewModel Index()
         {
-            var employees = _repository.GetAll<Domain.Employee>();
-            var tennesseens = employees.Where(x =>
-            {
-                var address = x.Addresses.FirstOrDefault();
-                return address != null && address.StateProvince.CountryRegionCode == "US" && address.StateProvince.StateProvinceCode.Trim() != "WA";
-            }).ToList();
+            var employees = _repository.GetAll<Domain.Employee>()
+                .Where(x =>
+                {
+                    var address = x.Addresses.FirstOrDefault();
+                    return address != null && address.StateProvince.CountryRegionCode == "US";
+                })
+                .OrderBy(x => x.Id)
+                .Take(10);
 
             return new IndexViewModel
             {
-                Employees = tennesseens
+                Employees = employees
             };
         }
 
@@ -32,6 +34,7 @@ namespace CQRS.Employee
         {
             var employee = _repository.Get<Domain.Employee>(input.Id);
             var address = employee.Addresses.First();
+
             return new EditViewModel
             {
                 Id = employee.Id,
@@ -47,6 +50,7 @@ namespace CQRS.Employee
         {
             var employee = _repository.Get<Domain.Employee>(input.Id);
             var address = employee.Addresses.First();
+
             address.AddressLine1 = input.Street;
             address.City = input.City;
 

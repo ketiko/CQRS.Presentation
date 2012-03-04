@@ -4,6 +4,6 @@ namespace CQRS.Employee
 {
     public class IndexViewModel
     {
-        public List<Domain.Employee> Employees { get; set; }
+        public IEnumerable<Domain.Employee> Employees { get; set; }
     }
 }

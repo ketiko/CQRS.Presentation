@@ -1,6 +1,6 @@
 ﻿<viewdata model="CQRS.Employee.IndexViewModel" />
 
-<h2 class="page-header">Employees</h2>
+<h2 class="page-header">Employees in United States</h2>
 
 <table class="table table-striped">
   <thead>

@@ -4,7 +4,7 @@ namespace CQRS.Domain
 {
     public interface IRepository
     {
-        IList<T> GetAll<T>();
+        IEnumerable<T> GetAll<T>();
         T Get<T>(int id);
         void Save<T>(T item);
     }
