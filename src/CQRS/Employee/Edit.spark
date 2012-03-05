@@ -5,7 +5,7 @@
 
 <form method="POST" action="Save" class="well">
   <fieldset>
-    <input type="hidden" name="Id" value="${Model.Id}" />
+    <input type="hidden" name="Id" value="${Model.EmployeeId}" />
 
     ${this.LabelFor(x=> x.Street)}
     ${this.InputFor(x=> x.Street)}

@@ -1,27 +1,25 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using CQRS.Domain;
 using FubuMVC.Core.Continuations;
+using PetaPoco;
 
 namespace CQRS.Employee
 {
     public class EmployeeController
     {
         readonly IRepository _repository;
+        readonly Database db;
 
         public EmployeeController(IRepository repository)
         {
             _repository = repository;
+            db = new Database("DB");
         }
 
         public IndexViewModel Index()
         {
-            var employees = _repository.GetAll<Domain.Employee>()
-                .Where(x =>
-                {
-                    var address = x.Addresses.FirstOrDefault();
-                    return address != null && address.StateProvince.CountryRegionCode == "US";
-                })
-                .OrderBy(x => x.Id)
+            var employees = db.Query<EmployeeDTO>("Select * From ViewModel.USEmployee")
                 .Take(10);
 
             return new IndexViewModel
@@ -32,29 +30,16 @@ namespace CQRS.Employee
 
         public EditViewModel Edit(EditInputModel input)
         {
-            var employee = _repository.Get<Domain.Employee>(input.Id);
-            var address = employee.Addresses.First();
-
-            return new EditViewModel
-            {
-                Id = employee.Id,
-                FirstName = employee.Person.FirstName,
-                LastName = employee.Person.LastName,
-                Street = address.AddressLine1,
-                City = address.City,
-                State = address.StateProvince.StateProvinceCode
-            };
+            return db.Single<EditViewModel>("Select * From ViewModel.USEmployeeAddress WHERE EmployeeId= @0", input.Id);
         }
 
         public FubuContinuation Save(SaveInputModel input)
         {
             var employee = _repository.Get<Domain.Employee>(input.Id);
-            var address = employee.Addresses.First();
 
-            address.AddressLine1 = input.Street;
-            address.City = input.City;
+            employee.MoveEmployeeToAddress(input.Street, input.City);
 
-            _repository.Save(address);
+            _repository.Save(employee);
 
             return FubuContinuation.RedirectTo<EmployeeController>(x => x.Index());
         }

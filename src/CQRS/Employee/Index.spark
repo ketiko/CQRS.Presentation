@@ -12,14 +12,14 @@
   <tbody>
     <tr each="var e in Model.Employees">
       <td>
-        <a href="Employee/Edit?Id=${e.Id}" class="btn btn-primary">
+        <a href="Employee/Edit?Id=${e.EmployeeId}" class="btn btn-primary">
           <i class="icon-pencil icon-white"></i>
           Edit
         </a>
       </td>
-      <td>${e.Person.FirstName}</td>
-      <td>${e.Person.LastName}</td>
-      <td>${e.Person.EmailAddress}</td>
+      <td>${e.FirstName}</td>
+      <td>${e.LastName}</td>
+      <td>${e.EmailAddress}</td>
     </tr>
   </tbody>
 </table>
