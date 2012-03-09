@@ -1,5 +1,5 @@
 <use namespace="System" />
 <use namespace="FubuCore" />
-<use namespace="CQRS.Employee" />
+<use namespace="CQRS.Employees" />
 <use namespace="CQRS.Domain" />
 <use namespace="System.Collections.Generic" />

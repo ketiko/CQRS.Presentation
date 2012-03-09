@@ -1,6 +1,11 @@
-namespace CQRS.Domain
+namespace CQRS.Domain.Events
 {
-    public class EmployeeMovedEvent
+    public interface IEvent
+    {
+        int Id { get; set; }
+    }
+
+    public class EmployeeMovedEvent : IEvent
     {
         public int Id { get; set; }
         public string Street { get; set; }

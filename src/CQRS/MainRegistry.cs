@@ -1,4 +1,5 @@
 ﻿using CQRS.Domain;
+using CQRS.Domain.Events;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
@@ -10,8 +11,11 @@ namespace CQRS
     {
         public MainRegistry()
         {
-            For<IRepository>()
-                .Use<Repository>();
+            For<IEventStore>()
+                .Use<EventStore>();
+
+            For<IRepository<Employee>>()
+                .Use<Repository<Employee>>();
 
             For<ISession>()
                 .Use(() => CreateSessionFactory().OpenSession());

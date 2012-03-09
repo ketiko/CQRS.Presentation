@@ -1,4 +1,4 @@
-using CQRS.Employee;
+using CQRS.Employees;
 using FubuMVC.Core;
 using FubuMVC.Spark;
 

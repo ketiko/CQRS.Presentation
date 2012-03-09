@@ -1,6 +1,6 @@
-﻿<viewdata model="CQRS.Employee.EditViewModel" />
+﻿<viewdata model="CQRS.Employees.EditViewModel" />
 
-<h2 class="page-header">Edit Address</h2>
+<h2 class="page-header">Move Employee To New Address</h2>
 <h3>${Model.FirstName} ${Model.LastName}</h3>
 
 <form method="POST" action="Save" class="well">

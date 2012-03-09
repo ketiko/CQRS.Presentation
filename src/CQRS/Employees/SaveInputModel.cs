@@ -1,4 +1,4 @@
-namespace CQRS.Employee
+namespace CQRS.Employees
 {
     public class SaveInputModel
     {

@@ -1,6 +1,6 @@
 using PetaPoco;
 
-namespace CQRS.Domain
+namespace CQRS.Domain.Events
 {
     public class EmployeeMovedEventHandler
     {
