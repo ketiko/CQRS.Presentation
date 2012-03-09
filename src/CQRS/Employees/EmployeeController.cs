@@ -2,7 +2,7 @@
 using CQRS.Domain;
 using FubuMVC.Core.Continuations;
 
-namespace CQRS.Employee
+namespace CQRS.Employees
 {
     public class EmployeeController
     {
@@ -15,7 +15,7 @@ namespace CQRS.Employee
 
         public IndexViewModel Index()
         {
-            var employees = _repository.GetAll<Domain.Employee>()
+            var employees = _repository.GetAll<Employee>()
                 .Where(x =>
                 {
                     var address = x.Addresses.FirstOrDefault();
@@ -32,7 +32,7 @@ namespace CQRS.Employee
 
         public EditViewModel Edit(EditInputModel input)
         {
-            var employee = _repository.Get<Domain.Employee>(input.Id);
+            var employee = _repository.Get<Employee>(input.Id);
             var address = employee.Addresses.First();
 
             return new EditViewModel
@@ -48,7 +48,7 @@ namespace CQRS.Employee
 
         public FubuContinuation Save(SaveInputModel input)
         {
-            var employee = _repository.Get<Domain.Employee>(input.Id);
+            var employee = _repository.Get<Employee>(input.Id);
             var address = employee.Addresses.First();
 
             address.AddressLine1 = input.Street;

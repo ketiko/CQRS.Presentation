@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CQRS.Employee
+namespace CQRS.Employees
 {
     public class IndexViewModel
     {
