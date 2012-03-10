@@ -1,48 +1,61 @@
-using System.Collections.Generic;
+using System;
+using System.Linq;
 using CQRS.Domain.Events;
-using NHibernate;
-using NHibernate.Linq;
+using EventStore;
 
 namespace CQRS.Domain
 {
     public interface IRepository<T> where T : AggregateRoot
     {
-        IEnumerable<T> GetAll();
         T Get(int id);
         void Save(T item);
     }
 
-    public class Repository<T> : IRepository<T> where T : AggregateRoot
+    public class Repository<T> : IRepository<T> where T : AggregateRoot, new()
     {
-        readonly ISession _session;
-        readonly IEventStore _eventStore;
+        readonly IStoreEvents _eventStore;
 
-        public Repository(ISession session, IEventStore eventStore)
+        public Repository(IStoreEvents eventStore)
         {
-            _session = session;
             _eventStore = eventStore;
-        }
-
-        public IEnumerable<T> GetAll()
-        {
-            return _session.Query<T>();
         }
 
         public T Get(int id)
         {
-            return _session.Get<T>(id);
+            var item = new T
+            {
+                Id = id
+            };
+
+            using (var stream = _eventStore.OpenStream(id.ToGuid(), 0, int.MaxValue))
+            {
+                if (stream.CommittedEvents.Count > 0)
+                {
+                    var events = stream.CommittedEvents.Select(x => (IEvent)x.Body);
+                    item.LoadFromEvents(events);
+                }
+            }
+
+            return item;
         }
 
         public void Save(T item)
         {
-            using (var tx = _session.BeginTransaction())
+            using (var stream = _eventStore.OpenStream(item.Id.ToGuid(), 0, int.MaxValue))
             {
-                _eventStore.Append(item.GetUncommitedChanges());
-                item.CommitChanges();
-                _session.Save(item);
+                var events = item.GetUncommitedChanges();
+                foreach (var e in events)
+                {
+                    stream.Add(new EventMessage
+                    {
+                        Body = e
+                    });
+                }
 
-                tx.Commit();
+                stream.CommitChanges(Guid.NewGuid());
             }
+
+            item.CommitChanges();
         }
     }
 }

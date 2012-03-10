@@ -1,8 +1,7 @@
 ﻿using CQRS.Domain;
 using CQRS.Domain.Events;
-using FluentNHibernate.Cfg;
-using FluentNHibernate.Cfg.Db;
-using NHibernate;
+using EventStore;
+using PetaPoco;
 using StructureMap.Configuration.DSL;
 
 namespace CQRS
@@ -11,24 +10,27 @@ namespace CQRS
     {
         public MainRegistry()
         {
-            For<IEventStore>()
-                .Use<EventStore>();
+            var database = new Database("DB");
+            var dispatcher = new EventDispatcher(new EmployeeMovedEventHandler(database));
+
+            For<Database>()
+                .Use(database);
+
+            var store = Wireup.Init()
+                .UsingSqlPersistence("DB")
+                .InitializeStorageEngine()
+                .UsingJsonSerialization()
+                .UsingSynchronousDispatchScheduler()
+                .DispatchTo(dispatcher)
+                .Build();
+
+            For<IStoreEvents>()
+                .Singleton()
+                .Use(store);
+
 
             For<IRepository<Employee>>()
                 .Use<Repository<Employee>>();
-
-            For<ISession>()
-                .Use(() => CreateSessionFactory().OpenSession());
-        }
-
-        private static ISessionFactory CreateSessionFactory()
-        {
-            return Fluently.Configure()
-              .Database(MsSqlConfiguration.MsSql2008
-              .ConnectionString(b => b.FromConnectionStringWithKey("DB"))
-              )
-              .Mappings(m => m.FluentMappings.AddFromAssemblyOf<MainRegistry>())
-              .BuildSessionFactory();
         }
     }
 }

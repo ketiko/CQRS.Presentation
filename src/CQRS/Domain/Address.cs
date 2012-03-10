@@ -2,9 +2,13 @@ namespace CQRS.Domain
 {
     public class Address
     {
-        public virtual int Id { get; set; }
-        public virtual string AddressLine1 { get; set; }
-        public virtual string City { get; set; }
-        public virtual StateProvince StateProvince { get; set; }
+        public Address(string street, string city)
+        {
+            Street = street;
+            City = city;
+        }
+
+        public string Street { get; private set; }
+        public string City { get; private set; }
     }
 }

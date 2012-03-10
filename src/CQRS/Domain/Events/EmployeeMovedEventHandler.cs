@@ -2,25 +2,30 @@ using PetaPoco;
 
 namespace CQRS.Domain.Events
 {
-    public class EmployeeMovedEventHandler
+    public interface IEventHandler<in T>
     {
-        readonly Database db;
+        void Handle(T e);
+    }
 
-        public EmployeeMovedEventHandler()
+    public class EmployeeMovedEventHandler : IEventHandler<EmployeeMovedEvent>
+    {
+        readonly Database _db;
+
+        public EmployeeMovedEventHandler(Database db)
         {
-            db = new Database("DB");
+            _db = db;
         }
 
         public void Handle(EmployeeMovedEvent e)
         {
-            using (var tx = db.GetTransaction())
+            using (var tx = _db.GetTransaction())
             {
-                db.Update("ViewModel.USEmployeeAddress", "EmployeeId", new
+                _db.Update("ViewModel.USEmployeeAddress", "EmployeeId", new
                 {
                     EmployeeId = e.Id,
                     e.Street,
                     e.City
-                }, new[] { "Street", "City" });
+                });
 
                 tx.Complete();
             }

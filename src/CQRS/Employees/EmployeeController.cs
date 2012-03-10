@@ -10,10 +10,10 @@ namespace CQRS.Employees
         readonly IRepository<Employee> _repository;
         readonly Database _db;
 
-        public EmployeeController(IRepository<Employee> repository)
+        public EmployeeController(IRepository<Employee> repository, Database db)
         {
             _repository = repository;
-            _db = new Database("DB");
+            _db = db;
         }
 
         public IndexViewModel Index()

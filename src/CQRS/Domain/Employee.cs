@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 using CQRS.Domain.Events;
 
 namespace CQRS.Domain
 {
     public abstract class AggregateRoot
     {
-        public virtual int Id { get; set; }
+        public int Id { get; set; }
         readonly List<IEvent> _changes;
 
         protected AggregateRoot()
@@ -31,21 +30,32 @@ namespace CQRS.Domain
 
         protected abstract void Apply(EmployeeMovedEvent e);
 
-        public virtual IEnumerable<IEvent> GetUncommitedChanges()
+        public IEnumerable<IEvent> GetUncommitedChanges()
         {
             return _changes.AsReadOnly();
         }
 
-        public virtual void CommitChanges()
+        public void CommitChanges()
         {
             _changes.Clear();
+        }
+
+        public void LoadFromEvents(IEnumerable<IEvent> events)
+        {
+            foreach (var e in events)
+            {
+                var movedEvent = e as EmployeeMovedEvent;
+                if (movedEvent != null)
+                {
+                    ApplyChange(movedEvent);
+                }
+            }
         }
     }
 
     public class Employee : AggregateRoot
     {
-        protected internal virtual Person Person { get; set; }
-        protected internal virtual IList<Address> Addresses { get; set; }
+        Address _address;
 
         public virtual void MoveEmployeeToAddress(string street, string city)
         {
@@ -59,10 +69,7 @@ namespace CQRS.Domain
 
         protected override void Apply(EmployeeMovedEvent e)
         {
-            var address = Addresses.First();
-
-            address.AddressLine1 = e.Street;
-            address.City = e.City;
+            _address = new Address(e.Street, e.City);
         }
     }
 }
