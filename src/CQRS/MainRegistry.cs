@@ -1,7 +1,9 @@
 ﻿using CQRS.Domain;
+using EventStore;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
+using PetaPoco;
 using StructureMap.Configuration.DSL;
 
 namespace CQRS
@@ -10,6 +12,27 @@ namespace CQRS
     {
         public MainRegistry()
         {
+            //var database = new Database("DB");
+            //var dispatcher = new EventDispatcher(new EmployeeMovedEventHandler(database));
+
+            //For<Database>()
+            //    .Use(database);
+
+            //var store = Wireup.Init()
+            //    .UsingSqlPersistence("DB")
+            //    .InitializeStorageEngine()
+            //    .UsingJsonSerialization()
+            //    .UsingSynchronousDispatchScheduler()
+            //    .DispatchTo(dispatcher)
+            //    .Build();
+
+            //For<IStoreEvents>()
+            //    .Singleton()
+            //    .Use(store);
+
+            //For<IRepository<Employee>>()
+            //    .Use<Repository<Employee
+
             For<IRepository>()
                 .Use<Repository>();
 
